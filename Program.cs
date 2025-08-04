@@ -4,6 +4,10 @@ using ToDoList.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logging detalhado para produção/deploy
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Railway exige que o app rode na porta 8080
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
