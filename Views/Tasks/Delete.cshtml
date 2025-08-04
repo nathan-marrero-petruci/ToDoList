@@ -3,6 +3,15 @@
     ViewData["Title"] = "Excluir Tarefa";
 }
 <h1>Excluir Tarefa</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
 <div class="alert alert-danger">
     <strong>Tem certeza que deseja excluir esta tarefa?</strong>
 </div>
