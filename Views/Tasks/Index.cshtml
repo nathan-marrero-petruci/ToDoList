@@ -1,0 +1,43 @@
+@model IEnumerable<ToDoList.Models.Task>
+@{
+    ViewData["Title"] = "Tarefas";
+}
+<h1>Minhas Tarefas</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+<p>
+    <a class="btn btn-primary" asp-action="Create">Nova Tarefa</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Concluída?</th>
+            <th>Criada em</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Description</td>
+            <td>@(item.IsCompleted ? "Sim" : "Não")</td>
+            <td>@item.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Excluir</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
