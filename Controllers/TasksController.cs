@@ -38,6 +38,8 @@ namespace ToDoList.Controllers
             {
                 _context.Add(task);
                 await _context.SaveChangesAsync();
+                // Log de criação de tarefa (padrão júnior)
+                Console.WriteLine($"[LOG] Tarefa criada: {task.Title} (ID: {task.Id})");
                 TempData["SuccessMessage"] = "Tarefa criada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
@@ -66,6 +68,8 @@ namespace ToDoList.Controllers
                 {
                     _context.Update(task);
                     await _context.SaveChangesAsync();
+                    // Log de edição de tarefa
+                    Console.WriteLine($"[LOG] Tarefa editada: {task.Title} (ID: {task.Id})");
                     TempData["SuccessMessage"] = "Tarefa editada com sucesso!";
                 }
                 catch (DbUpdateConcurrencyException)
@@ -100,6 +104,8 @@ namespace ToDoList.Controllers
             {
                 _context.Tasks.Remove(task);
                 await _context.SaveChangesAsync();
+                // Log de exclusão de tarefa
+                Console.WriteLine($"[LOG] Tarefa excluída: {task.Title} (ID: {task.Id})");
                 TempData["SuccessMessage"] = "Tarefa excluída com sucesso!";
             }
             else
