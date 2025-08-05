@@ -1,8 +1,8 @@
 @model IEnumerable<ToDoList.Models.Task>
 @{
-    ViewData["Title"] = "Tarefas";
+    ViewData["Title"] = "Tasks";
 }
-<h1>Minhas Tarefas</h1>
+<h1>My Tasks</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -13,15 +13,15 @@
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 <p>
-    <a class="btn btn-primary" asp-action="Create">Nova Tarefa</a>
+    <a class="btn btn-primary" asp-action="Create">New Task</a>
 </p>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Título</th>
-            <th>Descrição</th>
-            <th class="text-center">Concluída?</th>
-            <th>Criada em</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th class="text-center">Completed?</th>
+            <th>Created at</th>
             <th></th>
         </tr>
     </thead>
@@ -36,8 +36,8 @@
             </td>
             <td>@item.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm")</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Excluir</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
     }
@@ -60,7 +60,7 @@
                     checkbox.prop('checked', data.isCompleted);
                 },
                 error: function () {
-                    alert('Erro ao atualizar tarefa.');
+                    alert('Error updating task.');
                     checkbox.prop('checked', !checkbox.prop('checked'));
                 },
                 complete: function () {
