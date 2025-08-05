@@ -26,13 +26,18 @@
     </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ToDoList</a>
+            <div class="container-fluid position-relative">
+                <div class="w-100 d-flex justify-content-center align-items-center position-absolute" style="left:0;top:0;bottom:0;right:0;pointer-events:none;z-index:1;">
+                    <a class="navbar-brand fw-bold m-0 d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index" style="pointer-events:auto;">
+                        <span style="font-size: 1.7rem; margin-right:4px; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Arial', sans-serif; color: inherit;">📝</span>
+                        <span data-i18n="ProjectName">To do list</span>
+                    </a>
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation" style="z-index:2;">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" style="z-index:2;">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" data-i18n="Home">Home</a>
