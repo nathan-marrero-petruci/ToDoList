@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/ToDoList.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <button id="theme-toggle" class="btn btn-outline-secondary position-fixed" style="top: 16px; right: 16px; z-index: 2000;">🌙</button>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -45,6 +46,27 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Theme toggle logic
+        function setTheme(dark) {
+            if (dark) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-toggle').innerText = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('theme-toggle').innerText = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var theme = localStorage.getItem('theme');
+            setTheme(theme === 'dark');
+            document.getElementById('theme-toggle').addEventListener('click', function () {
+                setTheme(!document.body.classList.contains('dark-mode'));
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
