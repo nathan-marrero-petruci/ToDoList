@@ -1,6 +1,31 @@
 
 # ToDoList ASP.NET Core MVC
 
+## Demonstração do Projeto
+
+Veja abaixo o fluxo completo do CRUD da aplicação, desde a tela inicial até a exclusão de uma tarefa. O deploy público está disponível em: [ToDoList Online](https://todolist-production-22b2.up.railway.app/Tasks)
+
+### 1. Tela Inicial (Lista de Tarefas)
+![Tela Inicial](./docs/prints/tela-inicial.png)
+
+### 2. Criar Nova Tarefa
+![Nova Tarefa](./docs/prints/nova-tarefa.png)
+
+### 3. Tarefa Criada com Sucesso
+![Tarefa Criada](./docs/prints/tarefa-criada.png)
+
+### 4. Editar Tarefa
+![Editar Tarefa](./docs/prints/editar-tarefa.png)
+
+### 5. Tarefa Editada com Sucesso
+![Tarefa Editada](./docs/prints/tarefa-editada.png)
+
+### 6. Excluir Tarefa
+![Excluir Tarefa](./docs/prints/excluir-tarefa.png)
+
+### 7. Tarefa Excluída com Sucesso
+![Tarefa Excluída](./docs/prints/tarefa-excluida.png)
+
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
 ![Deploy](https://img.shields.io/badge/deploy-Railway-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
