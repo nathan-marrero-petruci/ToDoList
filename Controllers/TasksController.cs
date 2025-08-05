@@ -36,6 +36,7 @@ namespace ToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
+                task.UpdatedAt = DateTime.MinValue;
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 // Log de criação de tarefa (padrão júnior)
@@ -66,6 +67,7 @@ namespace ToDoList.Controllers
             {
                 try
                 {
+                    task.UpdatedAt = DateTime.UtcNow;
                     _context.Update(task);
                     await _context.SaveChangesAsync();
                     // Log de edição de tarefa
@@ -123,8 +125,25 @@ namespace ToDoList.Controllers
             if (task == null)
                 return NotFound();
             task.IsCompleted = !task.IsCompleted;
+            if (task.IsCompleted)
+            {
+                task.CompletedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                task.CompletedAt = null;
+            }
             await _context.SaveChangesAsync();
-            return Json(new { success = true, isCompleted = task.IsCompleted });
+            // Formatar as datas no padrão dd/MM/yyyy HH:mm (UTC-3)
+            string? completedAtStr = null;
+            if (task.CompletedAt.HasValue)
+            {
+                completedAtStr = task.CompletedAt.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss");
+            }
+            string updatedAtStr = task.UpdatedAt > DateTime.MinValue
+                ? task.UpdatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss")
+                : "-";
+            return Json(new { success = true, isCompleted = task.IsCompleted, completedAt = completedAtStr, updatedAt = updatedAtStr });
         }
     }
 }

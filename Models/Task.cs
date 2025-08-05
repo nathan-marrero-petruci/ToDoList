@@ -20,6 +20,12 @@ namespace ToDoList.Models
         // Indica se a tarefa foi concluída
         public bool IsCompleted { get; set; }
 
+        // Data em que a tarefa foi concluída (opcional)
+        public DateTime? CompletedAt { get; set; }
+
+        // Data da última atualização da tarefa
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
         // Data de criação da tarefa
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

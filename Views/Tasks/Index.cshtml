@@ -18,10 +18,12 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Description</th>
+            <th class="text-center">Title</th>
+            <th class="text-center">Description</th>
             <th class="text-center">Completed?</th>
-            <th>Created at</th>
+            <th class="text-center">Created at</th>
+            <th class="text-center">Updated at</th>
+            <th class="text-center">Completed at</th>
             <th></th>
         </tr>
     </thead>
@@ -29,12 +31,20 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td>@item.Title</td>
-            <td>@item.Description</td>
+            <td class="text-center align-middle">@item.Title</td>
+            <td class="text-center align-middle">@item.Description</td>
             <td class="text-center align-middle">
                 <input type="checkbox" class="toggle-complete" data-id="@item.Id" @(item.IsCompleted ? "checked" : "") style="transform: scale(1.3); cursor:pointer;" />
             </td>
-            <td>@item.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm")</td>
+            <td class="text-center align-middle">
+                @item.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss")
+            </td>
+            <td class="text-center align-middle">
+                @(item.UpdatedAt > DateTime.MinValue ? item.UpdatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss") : "-")
+            </td>
+            <td class="text-center align-middle">
+                @(item.CompletedAt.HasValue ? item.CompletedAt.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss") : "-")
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
@@ -58,6 +68,12 @@
                 headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
                 success: function (data) {
                     checkbox.prop('checked', data.isCompleted);
+                    // Atualiza a célula da data de atualização e conclusão na mesma linha
+                    var row = checkbox.closest('tr');
+                    var updatedAtCell = row.find('td').eq(4);
+                    var completedAtCell = row.find('td').eq(5);
+                    updatedAtCell.text(data.updatedAt ? data.updatedAt : '-');
+                    completedAtCell.text(data.completedAt ? data.completedAt : '-');
                 },
                 error: function () {
                     alert('Error updating task.');
