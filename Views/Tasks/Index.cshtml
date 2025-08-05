@@ -2,28 +2,40 @@
 @{
     ViewData["Title"] = "Tasks";
 }
-<h1>My Tasks</h1>
+<h1 data-i18n="MyTasks">My Tasks</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success" data-i18n-feedback="@TempData["SuccessMessage"]">@TempData["SuccessMessage"]</div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger" data-i18n-feedback="@TempData["ErrorMessage"]">@TempData["ErrorMessage"]</div>
 }
+<script>
+// Feedback i18n
+document.addEventListener('DOMContentLoaded', function () {
+    var lang = localStorage.getItem('lang') || 'en';
+    fetch('/i18n.json').then(resp => resp.json()).then(dict => {
+        document.querySelectorAll('[data-i18n-feedback]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-feedback');
+            if (dict[lang][key]) el.innerText = dict[lang][key];
+        });
+    });
+});
+</script>
 <p>
-    <a class="btn btn-primary" asp-action="Create">New Task</a>
+    <a class="btn btn-primary" asp-action="Create" data-i18n="NewTask">New Task</a>
 </p>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th class="text-center">Title</th>
-            <th class="text-center">Description</th>
-            <th class="text-center">Completed?</th>
-            <th class="text-center">Created at</th>
-            <th class="text-center">Updated at</th>
-            <th class="text-center">Completed at</th>
+            <th class="text-center" data-i18n="Title">Title</th>
+            <th class="text-center" data-i18n="Description">Description</th>
+            <th class="text-center" data-i18n="Completed">Completed?</th>
+            <th class="text-center" data-i18n="CreatedAt">Created at</th>
+            <th class="text-center" data-i18n="UpdatedAt">Updated at</th>
+            <th class="text-center" data-i18n="CompletedAt">Completed at</th>
             <th></th>
         </tr>
     </thead>
@@ -46,8 +58,8 @@
                 @(item.CompletedAt.HasValue ? item.CompletedAt.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss") : "-")
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" data-i18n="Edit">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" data-i18n="Delete">Delete</a>
             </td>
         </tr>
     }

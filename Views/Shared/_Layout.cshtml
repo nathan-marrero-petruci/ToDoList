@@ -6,11 +6,24 @@
     <title>@ViewData["Title"] - ToDoList</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.1/css/flag-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ToDoList.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <button id="theme-toggle" class="btn btn-outline-secondary position-fixed" style="top: 16px; right: 16px; z-index: 2000;">🌙</button>
+    <div style="position: fixed; top: 16px; right: 16px; z-index: 2000; display: flex; gap: 8px;">
+        <button id="theme-toggle" class="btn btn-outline-secondary">🌙</button>
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span id="current-flag" class="fi fi-us"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                <li><a class="dropdown-item lang-option" href="#" data-lang="en"><span class="fi fi-us" style="margin-right:8px;"></span>English</a></li>
+                <li><a class="dropdown-item lang-option" href="#" data-lang="pt-BR"><span class="fi fi-br" style="margin-right:8px;"></span>Português (BR)</a></li>
+                <li><a class="dropdown-item lang-option" href="#" data-lang="es"><span class="fi fi-es" style="margin-right:8px;"></span>Español</a></li>
+            </ul>
+        </div>
+    </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -22,10 +35,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" data-i18n="Home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy" data-i18n="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
@@ -40,7 +53,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - ToDoList - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - ToDoList - <a asp-area="" asp-controller="Home" asp-action="Privacy" data-i18n="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -59,12 +72,48 @@
                 localStorage.setItem('theme', 'light');
             }
         }
+        // Language dropdown logic
+        function setLang(lang) {
+            localStorage.setItem('lang', lang);
+            var flag = 'fi-us';
+            if (lang === 'pt-BR') flag = 'fi-br';
+            if (lang === 'es') flag = 'fi-es';
+            document.getElementById('current-flag').className = 'fi ' + flag;
+        }
+        // i18n logic
+        function applyI18n() {
+            var lang = localStorage.getItem('lang') || 'en';
+            fetch('/i18n.json')
+                .then(resp => resp.json())
+                .then(dict => {
+                    if (!dict[lang]) return;
+                    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                        var key = el.getAttribute('data-i18n');
+                        if (dict[lang][key]) {
+                            el.innerText = dict[lang][key];
+                        }
+                    });
+                });
+        }
         document.addEventListener('DOMContentLoaded', function () {
+            // Theme
             var theme = localStorage.getItem('theme');
             setTheme(theme === 'dark');
             document.getElementById('theme-toggle').addEventListener('click', function () {
                 setTheme(!document.body.classList.contains('dark-mode'));
             });
+            // Language
+            var lang = localStorage.getItem('lang') || 'en';
+            setLang(lang);
+            document.querySelectorAll('.lang-option').forEach(function (el) {
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var selected = this.getAttribute('data-lang');
+                    setLang(selected);
+                    location.reload();
+                });
+            });
+            applyI18n();
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

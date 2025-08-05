@@ -2,33 +2,62 @@
 @{
     ViewData["Title"] = "Excluir Tarefa";
 }
-<h1>Excluir Tarefa</h1>
+<h1 data-i18n="DeleteTask">Excluir Tarefa</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success" data-i18n-feedback="@TempData["SuccessMessage"]">@TempData["SuccessMessage"]</div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger" data-i18n-feedback="@TempData["ErrorMessage"]">@TempData["ErrorMessage"]</div>
 }
+<script>
+// Feedback i18n
+document.addEventListener('DOMContentLoaded', function () {
+    var lang = localStorage.getItem('lang') || 'en';
+    fetch('/i18n.json').then(resp => resp.json()).then(dict => {
+        document.querySelectorAll('[data-i18n-feedback]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-feedback');
+            if (dict[lang][key]) el.innerText = dict[lang][key];
+        });
+    });
+});
+</script>
 <div class="alert alert-danger">
-    <strong>Tem certeza que deseja excluir esta tarefa?</strong>
+    <strong data-i18n="DeleteTaskConfirm">Tem certeza que deseja excluir esta tarefa?</strong>
 </div>
 <dl class="row">
-    <dt class="col-sm-2">Título</dt>
+    <dt class="col-sm-2" data-i18n="Title">Título</dt>
     <dd class="col-sm-10">@Model.Title</dd>
-    <dt class="col-sm-2">Descrição</dt>
+    <dt class="col-sm-2" data-i18n="Description">Descrição</dt>
     <dd class="col-sm-10">@Model.Description</dd>
-    <dt class="col-sm-2">Concluída?</dt>
-    <dd class="col-sm-10">@(Model.IsCompleted ? "Sim" : "Não")</dd>
-    <dt class="col-sm-2">Criada em</dt>
+    <dt class="col-sm-2" data-i18n="Completed">Concluída?</dt>
+    <dd class="col-sm-10" data-i18n-completed>@(Model.IsCompleted ? "Sim" : "Não")</dd>
+    <dt class="col-sm-2" data-i18n="CreatedAt">Criada em</dt>
     <dd class="col-sm-10">@Model.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss")</dd>
-    <dt class="col-sm-2">Concluída em</dt>
+    <dt class="col-sm-2" data-i18n="CompletedAt">Concluída em</dt>
     <dd class="col-sm-10">@(Model.CompletedAt.HasValue ? Model.CompletedAt.Value.AddHours(-3).ToString("dd/MM/yyyy HH:mm:ss") : "-")</dd>
 </dl>
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <button type="submit" class="btn btn-danger" data-i18n="Delete">Excluir</button>
+    <a asp-action="Index" class="btn btn-secondary" data-i18n="Cancel">Cancelar</a>
+<script>
+// Tradução dinâmica para Sim/Não
+document.addEventListener('DOMContentLoaded', function () {
+    var lang = localStorage.getItem('lang') || 'en';
+    var yesNo = {
+        'en': { yes: 'Yes', no: 'No' },
+        'pt-BR': { yes: 'Sim', no: 'Não' },
+        'es': { yes: 'Sí', no: 'No' }
+    };
+    var completed = document.querySelector('[data-i18n-completed]');
+    if (completed) {
+        var val = completed.textContent.trim().toLowerCase();
+        if (val === 'sim' || val === 'yes' || val === 'sí') completed.textContent = yesNo[lang].yes;
+        if (val === 'não' || val === 'no') completed.textContent = yesNo[lang].no;
+    }
+});
+</script>
 </form>

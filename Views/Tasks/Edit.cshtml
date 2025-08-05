@@ -2,32 +2,44 @@
 @{
     ViewData["Title"] = "Edit Task";
 }
-<h1>Edit Task</h1>
+<h1 data-i18n="NewTask">Edit Task</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success" data-i18n-feedback="@TempData["SuccessMessage"]">@TempData["SuccessMessage"]</div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger" data-i18n-feedback="@TempData["ErrorMessage"]">@TempData["ErrorMessage"]</div>
 }
+<script>
+// Feedback i18n
+document.addEventListener('DOMContentLoaded', function () {
+    var lang = localStorage.getItem('lang') || 'en';
+    fetch('/i18n.json').then(resp => resp.json()).then(dict => {
+        document.querySelectorAll('[data-i18n-feedback]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n-feedback');
+            if (dict[lang][key]) el.innerText = dict[lang][key];
+        });
+    });
+});
+</script>
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
     <div class="form-group">
-        <label asp-for="Title">Title</label>
+        <label asp-for="Title" data-i18n="Title">Title</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description">Description</label>
+        <label asp-for="Description" data-i18n="Description">Description</label>
         <textarea asp-for="Description" class="form-control"></textarea>
     </div>
     <!-- Removed created/completed date from edit form for cleaner UX -->
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    <button type="submit" class="btn btn-success" data-i18n="Save">Save</button>
+    <a asp-action="Index" class="btn btn-secondary" data-i18n="Back">Back</a>
 </form>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

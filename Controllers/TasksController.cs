@@ -41,10 +41,10 @@ namespace ToDoList.Controllers
                 await _context.SaveChangesAsync();
                 // Log de criação de tarefa (padrão júnior)
                 Console.WriteLine($"[LOG] Tarefa criada: {task.Title} (ID: {task.Id})");
-                TempData["SuccessMessage"] = "Tarefa criada com sucesso!";
+                TempData["SuccessMessage"] = "TaskCreatedSuccess";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorMessage"] = "Erro ao criar tarefa. Verifique os dados.";
+            TempData["ErrorMessage"] = "TaskCreateError";
             return View(task);
         }
 
@@ -72,7 +72,7 @@ namespace ToDoList.Controllers
                     await _context.SaveChangesAsync();
                     // Log de edição de tarefa
                     Console.WriteLine($"[LOG] Tarefa editada: {task.Title} (ID: {task.Id})");
-                    TempData["SuccessMessage"] = "Tarefa editada com sucesso!";
+                    TempData["SuccessMessage"] = "TaskEditedSuccess";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -83,7 +83,7 @@ namespace ToDoList.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorMessage"] = "Erro ao editar tarefa. Verifique os dados.";
+            TempData["ErrorMessage"] = "TaskEditError";
             return View(task);
         }
 
@@ -108,11 +108,11 @@ namespace ToDoList.Controllers
                 await _context.SaveChangesAsync();
                 // Log de exclusão de tarefa
                 Console.WriteLine($"[LOG] Tarefa excluída: {task.Title} (ID: {task.Id})");
-                TempData["SuccessMessage"] = "Tarefa excluída com sucesso!";
+                TempData["SuccessMessage"] = "TaskDeletedSuccess";
             }
             else
             {
-                TempData["ErrorMessage"] = "Tarefa não encontrada para exclusão.";
+                TempData["ErrorMessage"] = "TaskDeleteNotFound";
             }
             return RedirectToAction(nameof(Index));
         }
