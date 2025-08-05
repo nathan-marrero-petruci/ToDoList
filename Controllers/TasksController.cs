@@ -114,5 +114,17 @@ namespace ToDoList.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        // POST: /Tasks/ToggleComplete/5
+        [HttpPost]
+        public async Task<IActionResult> ToggleComplete(int id)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null)
+                return NotFound();
+            task.IsCompleted = !task.IsCompleted;
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, isCompleted = task.IsCompleted });
+        }
     }
 }

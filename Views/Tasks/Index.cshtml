@@ -20,7 +20,7 @@
         <tr>
             <th>Título</th>
             <th>Descrição</th>
-            <th>Concluída?</th>
+            <th class="text-center">Concluída?</th>
             <th>Criada em</th>
             <th></th>
         </tr>
@@ -31,7 +31,9 @@
         <tr>
             <td>@item.Title</td>
             <td>@item.Description</td>
-            <td>@(item.IsCompleted ? "Sim" : "Não")</td>
+            <td class="text-center align-middle">
+                <input type="checkbox" class="toggle-complete" data-id="@item.Id" @(item.IsCompleted ? "checked" : "") style="transform: scale(1.3); cursor:pointer;" />
+            </td>
             <td>@item.CreatedAt.AddHours(-3).ToString("dd/MM/yyyy HH:mm")</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
@@ -39,5 +41,32 @@
             </td>
         </tr>
     }
+
     </tbody>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('.toggle-complete').change(function () {
+            var checkbox = $(this);
+            var id = checkbox.data('id');
+            checkbox.prop('disabled', true);
+            $.ajax({
+                url: '/Tasks/ToggleComplete/' + id,
+                type: 'POST',
+                headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                success: function (data) {
+                    checkbox.prop('checked', data.isCompleted);
+                },
+                error: function () {
+                    alert('Erro ao atualizar tarefa.');
+                    checkbox.prop('checked', !checkbox.prop('checked'));
+                },
+                complete: function () {
+                    checkbox.prop('disabled', false);
+                }
+            });
+        });
+    });
+</script>
