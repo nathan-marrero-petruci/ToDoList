@@ -67,11 +67,17 @@ namespace ToDoList.Controllers
             {
                 try
                 {
-                    task.UpdatedAt = DateTime.UtcNow;
-                    _context.Update(task);
+                    var originalTask = await _context.Tasks.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+                    if (originalTask == null) return NotFound();
+                    // Atualiza apenas os campos editáveis
+                    originalTask.Title = task.Title;
+                    originalTask.Description = task.Description;
+                    originalTask.IsCompleted = task.IsCompleted;
+                    originalTask.UpdatedAt = DateTime.UtcNow;
+                    // Mantém CreatedAt e CompletedAt
+                    _context.Update(originalTask);
                     await _context.SaveChangesAsync();
-                    // Log de edição de tarefa
-                    Console.WriteLine($"[LOG] Tarefa editada: {task.Title} (ID: {task.Id})");
+                    Console.WriteLine($"[LOG] Tarefa editada: {originalTask.Title} (ID: {originalTask.Id})");
                     TempData["SuccessMessage"] = "TaskEditedSuccess";
                 }
                 catch (DbUpdateConcurrencyException)
